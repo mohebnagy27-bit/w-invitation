@@ -238,6 +238,22 @@
   color: var(--charcoal-soft);
 }
 
+.rsvp__attribution {
+  margin: 2.25rem auto 0;
+  max-width: 34rem;
+  color: var(--charcoal-soft);
+  font-size: 0.56rem;
+  letter-spacing: 0.04em;
+  line-height: 1.55;
+  opacity: 0.66;
+  text-align: center;
+}
+
+.rsvp__attribution a {
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+}
+
 /* ---------- Mobile ---------- */
 @media (max-width: 900px) {
   .rsvp {

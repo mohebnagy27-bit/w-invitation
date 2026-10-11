@@ -6,6 +6,7 @@ import Story from "./components/Story";
 import EventDetails from "./components/EventDetails";
 import Gallery from "./components/Gallery";
 import RSVP from "./components/RSVP";
+import WeddingRings from "./components/WeddingRings";
 
 function App() {
   const [heroVisible, setHeroVisible] = useState(false);
@@ -16,6 +17,7 @@ function App() {
       {heroVisible && ( // CHANGED: wrapped in a fragment
         <>
           <StarBackground /> {/* NEW */}
+          <WeddingRings />
           <main>
             <Hero />
             <Story />

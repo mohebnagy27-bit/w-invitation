@@ -133,6 +133,9 @@ function EventDetails() {
             </a>
           </motion.div>
 
+          {/* Measured by the ring layer; intentionally empty on desktop. */}
+          <div className="event__ring-target" aria-hidden="true" />
+
           {/* ---------- Right: date, time, and the countdown right below ---------- */}
           <div>
             <motion.div {...reveal(fadeUp, 0.45)}>

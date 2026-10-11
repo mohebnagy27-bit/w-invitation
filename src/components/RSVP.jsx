@@ -284,6 +284,10 @@ function RSVP() {
             )}
           </AnimatePresence>
         </motion.div>
+
+        <p className="rsvp__attribution">
+          3D model: <a href="https://sketchfab.com/3d-models/free-ring-f08e7362b9cc4cacaa5e99a323f8de05" target="_blank" rel="noopener noreferrer">Free Ring</a> by <a href="https://sketchfab.com/busanello" target="_blank" rel="noopener noreferrer">Busanello</a>, <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>.
+        </p>
       </div>
     </section>
   );

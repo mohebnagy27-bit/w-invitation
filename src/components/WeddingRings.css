@@ -4,6 +4,7 @@
   z-index: 1;
   overflow: hidden;
   pointer-events: none;
+  opacity: 0.55;
 }
 
 .rings canvas {
@@ -14,12 +15,4 @@
 
 .rings--unavailable {
   display: none;
-}
-
-@media (max-width: 760px) {
-  .rings {
-    /* The Event Details columns stack here, so the model remains a restrained
-       viewport-centered background accent rather than covering either column. */
-    opacity: 0.72;
-  }
 }

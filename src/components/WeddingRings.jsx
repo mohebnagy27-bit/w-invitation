@@ -193,8 +193,8 @@ function WeddingRings() {
 
       if (!reducedMotion) {
         const gentleScrollBoost = clamp(Math.abs(scrollVelocity) / 2600, 0, 0.5);
-        stage.rotation.y += delta * (0.045 + gentleScrollBoost * 0.024);
-        stage.rotation.z += delta * (0.009 + gentleScrollBoost * 0.006);
+        stage.rotation.y += delta * (0.056 + gentleScrollBoost * 0.03);
+        stage.rotation.z += delta * (0.011 + gentleScrollBoost * 0.0075);
       }
 
       renderer.render(scene, camera);

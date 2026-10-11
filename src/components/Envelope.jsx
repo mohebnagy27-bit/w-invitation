@@ -1,33 +1,44 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import "./Envelope.css";
 
 const EASE = [0.65, 0, 0.35, 1];
-const TRAIL_PHASE_SECONDS = 3.8;
+const PETAL_COLORS = ["#ffb7c5", "#ffa4b6", "#ffccd5", "#fbc4b6"];
 
-const LIGHT_TRAILS = [
-  { left: "7%", delay: "0.16s", duration: "3.08s", height: "24vh", swayA: "1.5vw", swayB: "-2.2vw" },
-  { left: "17%", delay: "0.58s", duration: "2.72s", height: "18vh", swayA: "-1.7vw", swayB: "1.1vw", reverse: true },
-  { left: "28%", delay: "0.28s", duration: "3.34s", height: "29vh", swayA: "2.1vw", swayB: "-1.2vw" },
-  { left: "39%", delay: "0.88s", duration: "2.92s", height: "21vh", swayA: "-1.2vw", swayB: "2.4vw", reverse: true },
-  { left: "49%", delay: "0.45s", duration: "3.18s", height: "26vh", swayA: "1.1vw", swayB: "-2.8vw" },
-  { left: "58%", delay: "1.05s", duration: "2.56s", height: "17vh", swayA: "-2.3vw", swayB: "1.2vw", reverse: true },
-  { left: "68%", delay: "0.08s", duration: "3.44s", height: "30vh", swayA: "2.5vw", swayB: "-1.4vw" },
-  { left: "77%", delay: "0.72s", duration: "2.84s", height: "20vh", swayA: "-1vw", swayB: "2.1vw", reverse: true },
-  { left: "87%", delay: "0.38s", duration: "3.02s", height: "23vh", swayA: "1.8vw", swayB: "-2.1vw" },
-];
-
-function planTimeline(withTrails) {
-  if (!withTrails) {
-    return { heroAt: 1.2, fadeDelay: 1.4, fadeDuration: 1.6, trailDuration: 0 };
-  }
-
-  return {
-    heroAt: 1.25,
-    fadeDelay: 2.15,
-    fadeDuration: 1.55,
-    trailDuration: TRAIL_PHASE_SECONDS,
+function mulberry32(seed) {
+  let value = seed;
+  return () => {
+    value |= 0;
+    value = (value + 0x6d2b79f5) | 0;
+    let next = Math.imul(value ^ (value >>> 15), 1 | value);
+    next = (next + Math.imul(next ^ (next >>> 7), 61 | next)) ^ next;
+    return ((next ^ (next >>> 14)) >>> 0) / 4294967296;
   };
+}
+
+function createPetals() {
+  const random = mulberry32(20261011);
+
+  return Array.from({ length: 26 }, (_, id) => {
+    const duration = 7 + random() * 5;
+    return {
+      id,
+      color: PETAL_COLORS[Math.floor(random() * PETAL_COLORS.length)],
+      size: 10 + random() * 12,
+      left: random() * 100,
+      duration,
+      delay: -(random() * duration),
+      sway: 3 + random() * 5,
+      rotation: Math.round(random() * 360),
+      opacity: 0.48 + random() * 0.28,
+    };
+  });
+}
+
+const ROSE_PETALS = createPetals();
+
+function planTimeline() {
+  return { heroAt: 1.2, fadeDelay: 1.4, fadeDuration: 1.6 };
 }
 
 const fadeOut = {
@@ -57,24 +68,30 @@ const cardTextVariants = {
   open: { opacity: 1, transition: { delay: 0.9, duration: 0.6 } },
 };
 
-function LightTrails() {
+function RosePetals() {
   return (
-    <div className="envelope-trails" aria-hidden="true">
-      {LIGHT_TRAILS.map((trail, index) => (
+    <div className="envelope-petals" aria-hidden="true">
+      {ROSE_PETALS.map((petal) => (
         <span
-          key={index}
-          className={`envelope-trail${trail.reverse ? " envelope-trail--reverse" : ""}`}
+          key={petal.id}
+          className="envelope-petal"
           style={{
-            left: trail.left,
-            "--trail-delay": trail.delay,
-            "--trail-duration": trail.duration,
-            "--trail-height": trail.height,
-            "--trail-sway-a": trail.swayA,
-            "--trail-sway-b": trail.swayB,
+            left: `${petal.left}%`,
+            "--petal-color": petal.color,
+            "--petal-size": `${petal.size.toFixed(1)}px`,
+            "--petal-height": `${(petal.size * 0.72).toFixed(1)}px`,
+            "--petal-start": `${(-petal.size * 2).toFixed(1)}px`,
+            "--petal-duration": `${petal.duration.toFixed(1)}s`,
+            "--petal-delay": `${petal.delay.toFixed(1)}s`,
+            "--petal-sway": `${petal.sway.toFixed(1)}vw`,
+            "--petal-sway-reverse": `${(-petal.sway * 0.7).toFixed(1)}vw`,
+            "--petal-sway-small": `${(petal.sway * 0.45).toFixed(1)}vw`,
+            "--petal-sway-end": `${(-petal.sway * 0.35).toFixed(1)}vw`,
+            "--petal-rotation": `${petal.rotation}deg`,
+            "--petal-opacity": petal.opacity.toFixed(2),
+            "--petal-soft-opacity": (petal.opacity * 0.82).toFixed(2),
           }}
-        >
-          <span className="envelope-trail__core" />
-        </span>
+        />
       ))}
     </div>
   );
@@ -86,10 +103,8 @@ function Envelope({
   onOpen,
   onComplete,
 }) {
-  const reduceMotion = useReducedMotion();
   const [run, setRun] = useState(null);
   const [screenDone, setScreenDone] = useState(false);
-  const [trailsDone, setTrailsDone] = useState(false);
   const isOpen = run !== null;
 
   const callbacks = useRef({ onOpen, onComplete });
@@ -112,21 +127,18 @@ function Envelope({
 
     at(run.heroAt, () => callbacks.current.onOpen?.());
     at(run.fadeDelay + run.fadeDuration, () => setScreenDone(true));
-    if (run.withTrails) at(run.trailDuration, () => setTrailsDone(true));
 
     return () => timers.forEach(clearTimeout);
   }, [run]);
 
   useEffect(() => {
-    if (isOpen && screenDone && trailsDone) callbacks.current.onComplete?.();
-  }, [isOpen, screenDone, trailsDone]);
+    if (isOpen && screenDone) callbacks.current.onComplete?.();
+  }, [isOpen, screenDone]);
 
   const handleOpen = () => {
     if (isOpen) return;
 
-    const withTrails = !reduceMotion;
-    setRun({ withTrails, ...planTimeline(withTrails) });
-    if (!withTrails) setTrailsDone(true);
+    setRun(planTimeline());
   };
 
   return (
@@ -147,6 +159,7 @@ function Envelope({
             : { opacity: 1, transition: { duration: 1.2, ease: "easeInOut" } }
         }
       >
+        <RosePetals />
         <motion.button
           type="button"
           className={`envelope${isOpen ? " is-open" : ""}`}
@@ -185,8 +198,6 @@ function Envelope({
           </motion.span>
         </motion.button>
       </motion.div>
-
-      {run?.withTrails && !trailsDone && <LightTrails />}
     </>
   );
 }

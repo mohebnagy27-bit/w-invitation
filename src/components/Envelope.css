@@ -6,6 +6,7 @@
   align-items: center;
   justify-content: center;
   padding: var(--space-md);
+  isolation: isolate;
   background: var(--ivory);
 }
 
@@ -16,6 +17,7 @@
   --paper-flap: #efe6d8;
 
   position: relative;
+  z-index: 1;
   display: block;
   width: min(440px, 84vw);
   aspect-ratio: 4 / 3;
@@ -32,6 +34,56 @@
   cursor: pointer;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------- Rose petals (envelope screen only) ---------- */
+.envelope-petals {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.envelope-petal {
+  position: absolute;
+  top: var(--petal-start);
+  width: var(--petal-size);
+  height: var(--petal-height);
+  border-radius: 150% 0 150% 0;
+  background: var(--petal-color);
+  opacity: 0;
+  transform-origin: center;
+  animation: rose-petal-fall var(--petal-duration) linear var(--petal-delay)
+    infinite;
+}
+
+@keyframes rose-petal-fall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -4vh, 0) rotate(var(--petal-rotation));
+  }
+  8% {
+    opacity: var(--petal-opacity);
+  }
+  28% {
+    transform: translate3d(var(--petal-sway), 28vh, 0)
+      rotate(calc(var(--petal-rotation) + 80deg));
+  }
+  55% {
+    transform: translate3d(var(--petal-sway-reverse), 58vh, 0)
+      rotate(calc(var(--petal-rotation) + 180deg));
+  }
+  82% {
+    opacity: var(--petal-soft-opacity);
+    transform: translate3d(var(--petal-sway-small), 88vh, 0)
+      rotate(calc(var(--petal-rotation) + 280deg));
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--petal-sway-end), 112vh, 0)
+      rotate(calc(var(--petal-rotation) + 360deg));
+  }
 }
 
 .envelope.is-open {
@@ -227,84 +279,8 @@
   .envelope__seal {
     animation: none;
   }
-}
 
-/* ---------- Cascading light-trail transition ---------- */
-.envelope-trails {
-  position: fixed;
-  inset: 0;
-  z-index: 120;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.envelope-trail {
-  --trail-delay: 0s;
-  --trail-duration: 3s;
-  --trail-height: 22vh;
-  --trail-sway-a: 1vw;
-  --trail-sway-b: -1vw;
-
-  position: absolute;
-  top: calc(-1 * var(--trail-height));
-  width: 2px;
-  height: var(--trail-height);
-  opacity: 0;
-  animation: golden-trail-fall var(--trail-duration) cubic-bezier(0.34, 0.02, 0.24, 1) var(--trail-delay) both;
-}
-
-.envelope-trail__core {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border-radius: 999px;
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 248, 222, 0),
-    rgba(255, 241, 188, 0.98) 18%,
-    rgba(213, 168, 77, 0.86) 60%,
-    rgba(183, 132, 45, 0)
-  );
-  box-shadow:
-    0 0 4px rgba(255, 239, 183, 0.95),
-    0 0 12px rgba(210, 164, 73, 0.5),
-    0 0 24px rgba(189, 138, 49, 0.18);
-}
-
-.envelope-trail--reverse .envelope-trail__core {
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 248, 222, 0),
-    rgba(255, 246, 215, 0.92) 16%,
-    rgba(229, 196, 137, 0.83) 60%,
-    rgba(196, 152, 82, 0)
-  );
-}
-
-@keyframes golden-trail-fall {
-  0% {
-    opacity: 0;
-    transform: translate3d(0, 0, 0) rotate(-2deg);
-  }
-  10% {
-    opacity: 0.82;
-  }
-  32% {
-    opacity: 0.96;
-    transform: translate3d(var(--trail-sway-a), 38vh, 0) rotate(2.5deg);
-  }
-  61% {
-    opacity: 0.75;
-    transform: translate3d(var(--trail-sway-b), 76vh, 0) rotate(-2deg);
-  }
-  100% {
-    opacity: 0;
-    transform: translate3d(var(--trail-sway-a), 126vh, 0) rotate(1deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .envelope-trails {
+  .envelope-petals {
     display: none;
   }
 }

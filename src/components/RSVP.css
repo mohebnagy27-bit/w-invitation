@@ -1,0 +1,256 @@
+.rsvp {
+  background: var(--ivory);
+  color: var(--charcoal);
+  padding: var(--space-xl) var(--space-md);
+  overflow: hidden; /* guarantees no horizontal scroll */
+}
+
+.rsvp__inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ---------- Header ---------- */
+.rsvp__header {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+}
+
+.rsvp__label {
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  padding-left: 0.32em; /* re-centers text after letter-spacing */
+  color: var(--charcoal-soft);
+  margin-bottom: 2rem;
+}
+
+.rsvp__heading {
+  font-size: clamp(2.3rem, 4.6vw, 3.6rem);
+  font-weight: 300;
+  line-height: 1.12;
+  color: var(--charcoal);
+}
+
+.rsvp__heading em {
+  display: block;
+  font-style: italic;
+  color: var(--charcoal-soft);
+}
+
+.rsvp__intro {
+  margin-top: 1.8rem;
+  font-size: 0.98rem;
+  line-height: 1.9;
+  color: var(--charcoal-soft);
+}
+
+/* ---------- Panel ---------- */
+.rsvp__panel {
+  max-width: 34rem;
+  margin: 0 auto;
+}
+
+.rsvp__field {
+  margin-bottom: 2.2rem;
+}
+
+.rsvp__label-field {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--charcoal-soft);
+}
+
+.rsvp__optional {
+  letter-spacing: 0.12em;
+  text-transform: none;
+  font-style: italic;
+  color: var(--gray-soft);
+}
+
+/* ---------- Inputs (underline style) ---------- */
+.rsvp__input,
+.rsvp__select,
+.rsvp__textarea {
+  display: block;
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.7rem 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--beige-deep);
+  border-radius: 0;
+  font-family: inherit;
+  font-size: 1rem; /* 16px stops iOS from zooming on focus */
+  font-weight: 300;
+  color: var(--charcoal);
+  transition:
+    border-color 0.6s var(--ease-soft),
+    box-shadow 0.6s var(--ease-soft);
+}
+
+.rsvp__textarea {
+  min-height: 6rem;
+  resize: vertical;
+  line-height: 1.7;
+}
+
+.rsvp__input:focus,
+.rsvp__select:focus,
+.rsvp__textarea:focus {
+  outline: none;
+  border-bottom-color: var(--charcoal);
+  box-shadow: 0 1px 0 0 var(--charcoal);
+}
+
+.rsvp__input[aria-invalid="true"] {
+  border-bottom-color: var(--gold);
+}
+
+.rsvp__error {
+  margin-top: 0.5rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--charcoal);
+}
+
+/* ---------- Attendance options ---------- */
+.rsvp__fieldset {
+  min-width: 0;
+  margin: 0 0 2.2rem;
+  padding: 0;
+  border: 0;
+}
+
+.rsvp__options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  margin-top: 0.6rem;
+}
+
+.rsvp__option {
+  position: relative;
+  cursor: pointer;
+}
+
+.rsvp__option input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.rsvp__option span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.2rem;
+  padding: 0.8rem 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  border: 1px solid var(--beige-deep);
+  border-radius: 2px;
+  transition:
+    border-color 0.5s var(--ease-soft),
+    background 0.5s var(--ease-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .rsvp__option:hover span {
+    border-color: var(--gold);
+  }
+}
+
+.rsvp__option input:checked + span {
+  border-color: var(--charcoal);
+  background: rgba(233, 223, 208, 0.4);
+}
+
+.rsvp__option input:focus-visible + span {
+  outline: 1px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* ---------- Submit ---------- */
+.rsvp__submit {
+  width: 100%;
+  min-height: 3.4rem;
+  margin-top: 1rem;
+  background: var(--charcoal);
+  color: var(--ivory);
+  border: 1px solid var(--charcoal);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  transition:
+    background 0.6s var(--ease-soft),
+    color 0.6s var(--ease-soft);
+}
+
+.rsvp__submit:hover {
+  background: transparent;
+  color: var(--charcoal);
+}
+
+.rsvp__submit:focus-visible {
+  outline: 1px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* ---------- Success state ---------- */
+.rsvp__done {
+  padding: 3rem 0;
+  text-align: center;
+}
+
+.rsvp__rule {
+  display: block;
+  width: 44px;
+  height: 1px;
+  margin: 0 auto 2.2rem;
+  background: var(--gold);
+}
+
+.rsvp__done-title {
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  font-style: italic;
+  font-weight: 300;
+  line-height: 1.2;
+  color: var(--charcoal);
+}
+
+.rsvp__done-text {
+  max-width: 24rem;
+  margin: 1.4rem auto 0;
+  font-size: 0.98rem;
+  line-height: 1.9;
+  color: var(--charcoal-soft);
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 900px) {
+  .rsvp {
+    padding: var(--space-lg) var(--space-sm);
+  }
+
+  .rsvp__header {
+    margin-bottom: 3.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .rsvp__options {
+    grid-template-columns: 1fr;
+  }
+}

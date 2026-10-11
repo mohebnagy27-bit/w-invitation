@@ -1,0 +1,113 @@
+/* ---------- Star layer ---------- */
+.stars {
+  position: fixed;
+  inset: 0;
+  z-index: 0; /* above the page background, behind the content */
+  overflow: hidden;
+  pointer-events: none; /* never blocks clicks or scrolling */
+}
+
+.star {
+  position: absolute;
+  display: block;
+  width: var(--size);
+  height: var(--size);
+}
+
+/* Soft warm halo: this is what makes it read as a light source.
+   It brightens AND swells, not just fades. */
+.star::before {
+  content: "";
+  position: absolute;
+  inset: calc(var(--size) * -2.2);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(var(--halo), 0.9) 0%,
+    rgba(var(--halo), 0.38) 32%,
+    rgba(var(--halo), 0) 68%
+  );
+  opacity: var(--lo);
+  transform: scale(0.8);
+  animation: star-halo var(--dur) ease-in-out var(--delay) infinite;
+}
+
+/* Pale, bright center with a tight glow */
+.star::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--core);
+  box-shadow: 0 0 calc(var(--size) * 1.5) rgba(var(--halo), 0.8);
+  opacity: var(--core-lo);
+  animation: star-core var(--dur) ease-in-out var(--delay) infinite;
+}
+
+/* dim -> soft glow -> brighter -> soft glow -> dim */
+@keyframes star-halo {
+  0%,
+  100% {
+    opacity: var(--lo);
+    transform: scale(0.8);
+  }
+  30%,
+  70% {
+    opacity: var(--mid);
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: var(--hi);
+    transform: scale(var(--bloom));
+  }
+}
+
+@keyframes star-core {
+  0%,
+  100% {
+    opacity: var(--core-lo);
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Fewer stars on small phones */
+@media (max-width: 600px) {
+  .star--extra {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .star::before,
+  .star::after {
+    animation: none;
+  }
+  .star::before {
+    opacity: var(--mid);
+    transform: scale(0.98);
+  }
+  .star::after {
+    opacity: 1;
+  }
+}
+
+/* ---------- Layering (unchanged) ----------
+   stars (0) sit behind the page content (1).
+   The Hero keeps its own opaque background, so it covers the stars. */
+main {
+  position: relative;
+  z-index: 1;
+}
+
+/* These sections already used the same ivory as the page. Making them
+   transparent lets the stars show through, with no visual change otherwise.
+   The Hero is deliberately not listed. */
+main > .story,
+main > .event,
+main > .gallery,
+main > .location,
+main > .rsvp {
+  background: transparent;
+}
